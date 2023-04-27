@@ -1,4 +1,5 @@
 <?php
+
 namespace SuperCronManager;
 
 /**
@@ -13,7 +14,7 @@ class CronManager
     /**
      * 消息队列KEY, 用于标识消息类型
      */
-    
+
     /**
      * 标识任务ID
      * @var integer
@@ -121,7 +122,7 @@ class CronManager
      */
     public $workerMax = 1024;
 
-     /**
+    /**
      * 是否守护进程化
      * @var boolean
      */
@@ -166,6 +167,7 @@ class CronManager
         $this->registerSignal();
 
         $this->loop();
+
     }
 
     /**
@@ -181,16 +183,16 @@ class CronManager
             $this->managerDir = '/tmp/';
         }
 
-        !is_dir($this->managerDir) && mkdir($this->managerDir,0755,true);
+        !is_dir($this->managerDir) && mkdir($this->managerDir, 0755, true);
 
-        $prefix = 'cron-manager-' . substr(md5($requireFile), 0,16);
+        $prefix = 'cron-manager-' . substr(md5($requireFile), 0, 16);
 
         $this->startTime = date('Y-m-d H:i:s');
 
-        $this->pidFile        = $this->managerDir . $prefix . '.pid';
+        $this->pidFile = $this->managerDir . $prefix . '.pid';
         $this->taskStatusFile = $this->managerDir . $prefix . '.status';
-        if(!static::$logFile) {
-            static::$logFile  = $this->managerDir . $prefix . '.log';
+        if (!static::$logFile) {
+            static::$logFile = $this->managerDir . $prefix . '.log';
         }
 
         if (!$this->middleware) {
@@ -212,16 +214,16 @@ class CronManager
     private function parseArgv()
     {
         global $argv;
-    
-        $command = $this->argv!==''?$this->argv:@$argv[1];
+
+        $command = $this->argv !== '' ? $this->argv : @$argv[1];
         if (strpos($command, ':') !== false) {
             $this->middleware->push(static::QUEUE_COMMAND_VALUE, $command);
-            exit(); 
+            exit();
         }
 
         // start
         if (!$command) {
-            return ;
+            return;
         }
 
         switch ($command) {
@@ -237,7 +239,7 @@ class CronManager
                 if (file_exists(static::$logFile)) {
                     exit(file_get_contents(static::$logFile));
                 }
-                exit("\033[40;33m Faild: ".static::$logFile." not found!  \033[0m \n");
+                exit("\033[40;33m Faild: " . static::$logFile . " not found!  \033[0m \n");
                 break;
             // 检测运行环境
             case 'cronCheck':
@@ -250,15 +252,15 @@ class CronManager
         }
 
     }
-   
-     /**
+
+    /**
      * 守护进程化
      */
     private function daemonize()
     {
         if (!$this->daemon) {
             return;
-        } 
+        }
 
         $this->initFiles();
 
@@ -313,7 +315,7 @@ class CronManager
     {
         global $stdin, $stdout, $stderr;
 
-        //关闭打开的文件描述符    
+        //关闭打开的文件描述符
         fclose(STDIN);
         fclose(STDOUT);
         fclose(STDERR);
@@ -324,17 +326,18 @@ class CronManager
             $this->output = realpath($this->output);
         }
 
-        $stdin  = fopen($this->output, 'r');
+        $stdin = fopen($this->output, 'r');
         $stdout = fopen($this->output, 'a');
         $stderr = fopen($this->output, 'a');
     }
+
     /**
      * 启动worker
      * @return void
      */
     private function startWorkers()
     {
-        for ($i=0; $i < $this->workerNum; $i++) { 
+        for ($i = 0; $i < $this->workerNum; $i++) {
             $this->forkWorker();
         }
     }
@@ -365,7 +368,7 @@ class CronManager
         }
     }
 
-     /**
+    /**
      * 注册信号
      * @return vold
      */
@@ -387,7 +390,7 @@ class CronManager
             //平滑停止
             case $this->signalSupport['stop']:
                 $this->status = static::MASTER_STATUS_STOP;
-                for ($i=0; $i < count($this->workers); $i++) { 
+                for ($i = 0; $i < count($this->workers); $i++) {
                     $this->middleware->push(CronManager::QUEUE_SIG_VALUE, $this->signalSupport['stop']);
                 }
                 break;
@@ -396,7 +399,8 @@ class CronManager
             case $this->signalSupport['STOP']:
                 $this->status = static::MASTER_STATUS_STOP;
                 foreach ($this->workers as $pid => $v) {
-                    posix_kill($pid, SIGKILL); unset($this->workers[$pid]);
+                    posix_kill($pid, SIGKILL);
+                    unset($this->workers[$pid]);
                 }
                 $this->clear();
                 break;
@@ -404,7 +408,7 @@ class CronManager
             //通知worker进程重启
             case $this->signalSupport['restart']:
                 $this->status = static::MASTER_STATUS_RESTART;
-                for ($i=0; $i < count($this->workers); $i++) { 
+                for ($i = 0; $i < count($this->workers); $i++) {
                     $this->middleware->push(CronManager::QUEUE_SIG_VALUE, $this->signalSupport['restart']);
                 }
                 break;
@@ -425,14 +429,13 @@ class CronManager
 
         if ($command !== false) {
 
-            $mapTaskStatus = function($taskIds, $status) {
+            $mapTaskStatus = function ($taskIds, $status) {
                 foreach ($taskIds as $id) {
                     if (isset($this->tasks[$id])) {
                         // 删除
                         if ($status == 2) {
                             unset($this->tasks[$id]);
-                        }
-                        else {
+                        } else {
                             $this->tasks[$id]->setStatus($status);
                         }
                     }
@@ -441,7 +444,7 @@ class CronManager
 
             static::log('debug', "接收到任务指令: $command");
 
-            if (strpos($command,':') === false) {
+            if (strpos($command, ':') === false) {
                 return static::log('debug', "无法解析任务指令: $command");
             }
 
@@ -475,83 +478,82 @@ class CronManager
 
         $this->startWorkers();
 
-        while (1) {
-
-            pcntl_signal_dispatch();
-
-            // 处理任务指令,如停止,开始某个任务
-            $this->execTaskCommand();
-
-            if ($this->status == static::MASTER_STATUS_RUN) {
-
-                $queueNum = $this->middleware->getMessageNum();
-                if($queueNum !== 0) {
-                    $queueStr = '列队待处理任务数: ' . $queueNum;
-                    // 扩容
-                    if ($queueNum >= 5) {
-                        $queueStr .= " 满足条件: [自动扩容]";
-                        $this->forkWorker();
-                    }
-                    static::log('debug', $queueStr);
-                }
-
-
-                foreach ($this->tasks as $id => &$task) {
-                    // 任务是否可运行
-                    if ($task->valid()) {
-                        // 计算下次运行时间
-                        $task->calcNextTime();
-                        // 向消息队列写任务ID
-                        $this->middleware->push(
-                            CronManager::QUEUE_TASK_ID,
-                            $id
-                        );
-
-                        $task->count++;
-                    }
-                }
-
-                // 将任务运行状态记录进文件
-                file_put_contents(
-                    $this->taskStatusFile,
-                    ConsoleManager::taskStatusTable($this->tasks, [
-                        'version'    => static::VERSION,
-                        'pid'        => getmypid(),
-                        'output'     => $this->output,
-                        'task_num'   => count($this->tasks),
-                        'worker_num' => count($this->workers),
-                        'queue_num'  => $queueNum,
-                        'start_time' => $this->startTime
-                    ])
-                );
-                
-            }
-
-            foreach ($this->workers as $pid => $workerStatus) {
-                $pid = pcntl_wait($status, WNOHANG);
-                if ($pid > 0) {
-                    unset($this->workers[$pid]);
-                    $exit = pcntl_wexitstatus($status);
-                    // 重启worker
-                    if ($exit == $this->signalSupport['restart']) {
-                        static::log('debug', "[$pid] 退出重启");
-                        $this->forkWorker();
-                        $this->status = static::MASTER_STATUS_RUN;
-                    } else {
-                        static::log('debug', "[$pid] 退出");
-                    }
-                }
-            }
-
-            // 所有worker已退出
-            if (empty($this->workers)) {
-                $this->clear();
-                break;
-            }
-
-            sleep(1);
-        }
         static::log('debug', 'master进程退出');
+    }
+
+    public function loopWhile()
+    {
+
+        pcntl_signal_dispatch();
+
+        // 处理任务指令,如停止,开始某个任务
+        $this->execTaskCommand();
+
+        if ($this->status == static::MASTER_STATUS_RUN) {
+
+            $queueNum = $this->middleware->getMessageNum();
+            if ($queueNum !== 0) {
+                $queueStr = '列队待处理任务数: ' . $queueNum;
+                // 扩容
+                if ($queueNum >= 5) {
+                    $queueStr .= " 满足条件: [自动扩容]";
+                    $this->forkWorker();
+                }
+                static::log('debug', $queueStr);
+            }
+
+
+            foreach ($this->tasks as $id => &$task) {
+                // 任务是否可运行
+                if ($task->valid()) {
+                    // 计算下次运行时间
+                    $task->calcNextTime();
+                    // 向消息队列写任务ID
+                    $this->middleware->push(
+                        CronManager::QUEUE_TASK_ID,
+                        $id
+                    );
+
+                    $task->count++;
+                }
+            }
+
+            // 将任务运行状态记录进文件
+            file_put_contents(
+                $this->taskStatusFile,
+                ConsoleManager::taskStatusTable($this->tasks, [
+                    'version'    => static::VERSION,
+                    'pid'        => getmypid(),
+                    'output'     => $this->output,
+                    'task_num'   => count($this->tasks),
+                    'worker_num' => count($this->workers),
+                    'queue_num'  => $queueNum,
+                    'start_time' => $this->startTime
+                ])
+            );
+
+        }
+
+//        foreach ($this->workers as $pid => $workerStatus) {
+//            $pid = pcntl_wait($status, WNOHANG);
+//            if ($pid > 0) {
+//                unset($this->workers[$pid]);
+//                $exit = pcntl_wexitstatus($status);
+//                // 重启worker
+//                if ($exit == $this->signalSupport['restart']) {
+//                    static::log('debug', "[$pid] 退出重启");
+//                    $this->forkWorker();
+//                    $this->status = static::MASTER_STATUS_RUN;
+//                } else {
+//                    static::log('debug', "[$pid] 退出");
+//                }
+//            }
+//        }
+
+        // 所有worker已退出
+        if (empty($this->workers)) {
+            $this->clear();
+        }
     }
 
     /**
@@ -565,7 +567,7 @@ class CronManager
         @unlink($this->taskStatusFile);
     }
 
-     /**
+    /**
      * 设置中间件
      * @param MiddlewareInterface $middleware 消息队列中间件
      */
@@ -576,13 +578,13 @@ class CronManager
 
     /**
      * 添加定时任务
-     * @param  string  $name      
-     * @param  string/array  $intvalTag 
-     * @param  callable $callable 
-     * @param  array $ticks 进程分片  
+     * @param string $name
+     * @param string/array  $intvalTag
+     * @param callable $callable
+     * @param array $ticks 进程分片
      */
     public function taskInterval($name, $intvalTag, callable $callable, array $ticks = [])
-    {   
+    {
         if (!empty($ticks)) {
             foreach ($ticks as $tick) {
                 $t = new Task($name, $intvalTag, $callable, $tick);
@@ -598,15 +600,16 @@ class CronManager
      * 获取唯一实例ID,借鉴workerman
      * @return string
      */
-    public static function requireFile() {
+    public static function requireFile()
+    {
         $backtrace = debug_backtrace();
         return $backtrace[count($backtrace) - 1]['file'];
     }
 
     /**
      * 记录日志
-     * @param  string $tag    日志标识
-     * @param  string $message 内容
+     * @param string $tag 日志标识
+     * @param string $message 内容
      */
     public static function log($tag, $message)
     {
