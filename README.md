@@ -55,7 +55,7 @@ cronManager是一个纯PHP实现的定时任务管理工具,api简单清晰,采�
 
 * `composer`安装
 
-> composer require cron-manager
+> composer require hehao/cron-manager
 
 ## 可能遇到的问题,例如更新完版本
 
