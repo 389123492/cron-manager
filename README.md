@@ -12,8 +12,6 @@ cronManager是一个纯PHP实现的定时任务管理工具,api简单清晰,采�
 
 * 支持守护进程
 
-* 平滑重启
-
 * 提供各种命令监控任务运行状态
 
 * 兼容部分crontab语法
@@ -57,7 +55,7 @@ cronManager是一个纯PHP实现的定时任务管理工具,api简单清晰,采�
 
 * `composer`安装
 
-> composer require godv/cron-manager
+> composer require cron-manager
 
 ## 可能遇到的问题,例如更新完版本
 
@@ -152,23 +150,14 @@ $manager->run();
 
 
 ## 参数命令大全
-* `-d` 守护进程化
-* `status` 查看任务状态
-* `stop` 平滑停止
-* `STOP` 强制停止 
-* `restart` 平滑重启(`注意, 此命令仅仅是重启worker进程,修改定时任务代码,必须stop才能生效`)
-* `check` 检查扩展情况 
+* `cronStatus` 查看任务状态
+* `cronLog` 查看日志
+* `cronCheck` 检查扩展情况 
 
 ### 命令使用场景
 
-* **想停掉id为1,2,3的任务** (`命令语法: stop:n[,n,n]`)
-> php test.php stop:1,2,3
-* **想删除id为1,2,3的任务,不想在status命令中看到它** (`命令语法: STOP:n[,n,n]`)
-> php test.php STOP:1,2,3
-* **开启用stop命令停止的任务,id为1,2** (`命令语法: start:n[,n,n]`)
-> php test.php start:1,2
 * **设置的定时任务时间太长了,想现在就运行一下,id为1** (`命令语法: run:n[,n,n]`)
-> php test.php run:1
+> php test.php cronRun:1
 
 ### cli下太麻烦了,运维大哥都看你不顺眼了,叫你自己想办法把这玩意弄到后台管理去,到更新代码的时候再烦他
 

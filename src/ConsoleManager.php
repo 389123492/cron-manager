@@ -450,18 +450,6 @@ class CronManager
             $taskIds = explode(',', $taskIds);
 
             switch ($tag) {
-                // 将任务状态置为开始
-                case 'cronStart':
-                    $mapTaskStatus($taskIds, 0);
-                    break;
-                // 将任务状态置为关闭
-                case 'cronStop':
-                    $mapTaskStatus($taskIds, 1);
-                    break;
-                // 删除某个任务
-                case 'cronSTOP':
-                    $mapTaskStatus($taskIds, 2);
-                    break;
                 // 手动运行一次任务,不影响原执行时间
                 case 'cronRun':
                     foreach ($taskIds as $taskId) {
@@ -470,7 +458,6 @@ class CronManager
                     }
                     break;
                 default:
-                    static::log('debug', "无法解析任务指令: $command");
                     break;
             }
 
