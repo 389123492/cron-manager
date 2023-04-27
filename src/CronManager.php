@@ -225,46 +225,22 @@ class CronManager
         }
 
         switch ($command) {
-            // 守护进程化
-            case '-d':
-                $this->daemon = true;
-                break;
-            // 停止
-            case 'stop':
-                $pid = intval(@file_get_contents($this->pidFile));
-                posix_kill($pid, $this->signalSupport['stop']);
-                echo "\33[KStoping cron-manager:\t\t[\033[40;33m WAIT \033[0m]\r";
-                while (file_exists($this->pidFile)) {
-                }
-                exit("\33[KStoping cron-manager:\t\t[\033[40;33m OK \033[0m]\n");
-                break;
-            case 'STOP':
-                $pid = intval(@file_get_contents($this->pidFile));
-                posix_kill($pid, $this->signalSupport['STOP']);
-                exit("STOPING cron-manager:\t\t[\033[40;33m OK \033[0m]\n");
-                break;
-            // 重启worker
-            case 'restart':
-                $pid = intval(@file_get_contents($this->pidFile));
-                posix_kill($pid, $this->signalSupport['restart']);
-                exit("Restarting cron-manager:\t\t[\033[40;33m OK \033[0m]\n");
-                break;
             // 查看任务状态
-            case 'status':
+            case 'cronStatus':
                 if (file_exists($this->taskStatusFile)) {
                     exit(file_get_contents($this->taskStatusFile));
                 }
                 exit("\033[40;33m Faild: $this->taskStatusFile not found!  \033[0m \n");
                 break;
             // 打印log
-            case 'log':
+            case 'cronLog':
                 if (file_exists(static::$logFile)) {
                     exit(file_get_contents(static::$logFile));
                 }
                 exit("\033[40;33m Faild: ".static::$logFile." not found!  \033[0m \n");
                 break;
             // 检测运行环境
-            case 'check':
+            case 'cronCheck':
                 exit(ConsoleManager::checkExtensions());
                 break;
             default:
@@ -636,8 +612,7 @@ class CronManager
      */
     public static function requireFile() {
         $backtrace = debug_backtrace();
-        $requireFile = $backtrace[count($backtrace) - 1]['file'];
-        return str_replace('_', '/', $requireFile);
+        return $backtrace[count($backtrace) - 1]['file'];
     }
 
     /**

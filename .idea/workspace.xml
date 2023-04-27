@@ -2,15 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2cc4a806-518f-4b01-b2b8-54697a019b4e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/doc/thinkphp5/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/web-cronmanager/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/web-cronmanager/viewCronManager.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ConsoleManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/ConsoleManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CronManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/CronManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CronParser.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/CronParser.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Interfaces/MiddlewareInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interfaces/MiddlewareInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Interfaces/WorkerInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interfaces/WorkerInterface.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
@@ -31,13 +38,15 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\phpstudy_pro\WWW\cron-manager\src" />
       <recent name="D:\phpstudy_pro\WWW\cron-manager" />
+      <recent name="D:\phpstudy_pro\WWW\cron-manager\src\Interfaces" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -48,7 +57,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1682578293024</updated>
-      <workItem from="1682578294115" duration="1971000" />
+      <workItem from="1682578294115" duration="2578000" />
+      <workItem from="1682581101834" duration="486000" />
     </task>
     <servers />
   </component>
@@ -65,5 +75,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
